@@ -16,3 +16,4 @@ git config --global
 git branch
 git branch checkout
 git merge
+git checkout -b <branch name>

@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     aws = {
-      source = "hashicorp/aws"
+      source  = "hashicorp/aws"
       version = "5.94.1"
     }
     # azurerm = {
@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 resource "aws_vpc" "VPC" {
-  cidr_block       = "10.0.0.0/16"
+  cidr_block = "10.0.0.0/16"
   #instance_tenancy = "default"
 
   tags = {
@@ -46,7 +46,7 @@ resource "aws_subnet" "Pvt" {
 resource "aws_route_table" "Pub-RT" {
   vpc_id = aws_vpc.VPC.id
 
-#   route = []
+  #   route = []
 
   tags = {
     Name = "PUB-rt"
@@ -54,7 +54,7 @@ resource "aws_route_table" "Pub-RT" {
 }
 
 resource "aws_route_table" "Pvt-RT" {
-  vpc_id = aws_vpc.example.id
+  vpc_id = aws_vpc.VPC.id
 
   route = []
 
@@ -68,18 +68,18 @@ resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.VPC.id
 
   tags = {
-    Name = "main"
+    Name = "IGW"
   }
 }
 
 resource "aws_eip" "eip" {
   #instance = aws_instance.web.id
-  domain   = "vpc"
+  domain = "vpc"
 }
 
 
 
-resource "aws_nat_gateway" "NAT" {
+resource "aws_nat_gateway" "vignesh" {
   allocation_id = aws_eip.eip.id
   subnet_id     = aws_subnet.Pub.id
 
@@ -90,4 +90,27 @@ resource "aws_nat_gateway" "NAT" {
   # To ensure proper ordering, it is recommended to add an explicit dependency
   # on the Internet Gateway for the VPC.
   depends_on = [aws_internet_gateway.igw]
+}
+
+
+resource "aws_route_table_association" "pub" {
+  subnet_id      = aws_subnet.Pub.id
+  route_table_id = aws_route_table.Pub-RT.id
+}
+
+resource "aws_route_table_association" "pvt" {
+  subnet_id      = aws_subnet.Pvt.id
+  route_table_id = aws_route_table.Pvt-RT.id
+}
+
+resource "aws_route" "Pub" {
+  route_table_id            = aws_route_table.Pub-RT.id
+  destination_cidr_block    = "0.0.0.0/0"
+  gateway_id = aws_internet_gateway.igw.id
+}
+
+resource "aws_route" "Pvt" {
+  route_table_id            = aws_route_table.Pvt-RT.id
+  destination_cidr_block    = "0.0.0.0/0"
+  nat_gateway_id = aws_nat_gateway.vignesh.id
 }
