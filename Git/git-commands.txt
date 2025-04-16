@@ -1,0 +1,17 @@
+git -v
+gitg init
+git add .
+git status
+git commit
+git log
+git log --oneline
+git push
+git pull 
+git fetch
+git clone
+git config --global 
+
+
+
+https
+ssh
