@@ -2,7 +2,7 @@ git -v
 gitg init
 git add .
 git status
-git commit
+git commit   
 git log
 git log --oneline
 git push
