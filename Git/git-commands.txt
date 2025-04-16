@@ -13,5 +13,5 @@ git config --global
 
 
 
-https
-ssh
+git branch
+git branch checkout
