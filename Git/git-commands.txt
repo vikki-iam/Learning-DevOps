@@ -17,3 +17,12 @@ git branch
 git branch checkout
 git merge
 git checkout -b <branch name>
+git remote add origin <https_url>
+
+
+Coflict
+Revert/Reset
+Cherry-pick
+
+
+
