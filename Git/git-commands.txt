@@ -22,7 +22,7 @@ git remote add origin <https_url>
 
 Coflict
 Revert/Reset
-Cherry-pick
+Cherry-pic
 
 
 
